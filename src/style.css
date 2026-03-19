@@ -244,6 +244,7 @@ h1 {
     border-color 0.2s ease,
     transform 0.2s ease,
     background 0.2s ease;
+    font-weight: 600;
 }
 
 .field select,
