@@ -232,6 +232,14 @@ strong {
     padding: 1rem 0;
   }
 
+  .control-panel {
+    order: 1;
+  }
+
+  .hero-panel {
+    order: 2;
+  }
+
   .hero-panel,
   .control-panel {
     padding: 1.5rem;
