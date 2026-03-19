@@ -17,6 +17,7 @@ const aperture = ref(2.8)
 const subjectDistance = ref(3)
 const savedConfigurations = ref([])
 const theme = ref('dark')
+const formulaOpen = ref(false)
 
 const subjectDistanceMm = computed(() => Math.max(Number(subjectDistance.value) || 0, 0) * 1000)
 const focalLengthMm = computed(() => Math.max(Number(focalLength.value) || 0, 0.1))
@@ -135,6 +136,10 @@ function toggleTheme() {
   theme.value = theme.value === 'dark' ? 'light' : 'dark'
 }
 
+function toggleFormula() {
+  formulaOpen.value = !formulaOpen.value
+}
+
 function formatDistance(distanceMm) {
   const distanceMeters = distanceMm / 1000
 
@@ -182,6 +187,31 @@ function formatDistance(distanceMm) {
           <p class="range-label">Far limit</p>
           <p class="range-value">{{ farDisplay }}</p>
         </article>
+      </div>
+
+      <button
+        class="theme-toggle formula-top-toggle"
+        type="button"
+        @click="toggleFormula"
+        :aria-expanded="formulaOpen"
+      >
+        <span class="theme-toggle-symbol" aria-hidden="true">ⓘ</span>
+        <span>Formula</span>
+      </button>
+
+      <div v-if="formulaOpen" class="formula-card">
+        <p class="formula-heading">Depth of field formula</p>
+        <p class="formula-line">DOF ≈ (2 × u² × N × c) / f²</p>
+        <p class="formula-copy">
+          Using a circle of confusion of <strong>{{ cocDisplay }} mm</strong>.
+        </p>
+        <div class="formula-vars">
+          <p><strong>DOF</strong>: total depth of field.</p>
+          <p><strong>u</strong>: distance from camera to subject.</p>
+          <p><strong>N</strong>: aperture as the f-number.</p>
+          <p><strong>c</strong>: acceptable circle of confusion diameter.</p>
+          <p><strong>f</strong>: focal length of the lens.</p>
+        </div>
       </div>
     </section>
 
@@ -240,13 +270,6 @@ function formatDistance(distanceMm) {
         <span>Save configuration</span>
       </button>
 
-      <div class="formula-card">
-        <p class="formula-heading">Depth of field formula</p>
-        <p class="formula-line">DOF ≈ (2 × u² × N × c) / f²</p>
-        <p class="formula-copy">
-          Using a circle of confusion of <strong>{{ cocDisplay }} mm</strong>.
-        </p>
-      </div>
     </section>
 
     <section class="saved-panel">
