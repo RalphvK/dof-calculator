@@ -1,16 +1,60 @@
 :root {
-  font-family: 'Manrope', 'Segoe UI', sans-serif;
-  line-height: 1.5;
-  font-weight: 500;
-  color: #f7f2e9;
-  background:
+  --font-body: 'Manrope', 'Segoe UI', sans-serif;
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --bg:
     radial-gradient(circle at top left, rgba(211, 125, 72, 0.28), transparent 26%),
     radial-gradient(circle at bottom right, rgba(95, 133, 161, 0.2), transparent 30%),
     linear-gradient(135deg, #1b1714 0%, #2d241f 45%, #161413 100%);
+  --text: #f7f2e9;
+  --muted: rgba(247, 242, 233, 0.72);
+  --soft: rgba(247, 242, 233, 0.58);
+  --panel-bg: rgba(18, 16, 15, 0.72);
+  --card-bg: rgba(255, 255, 255, 0.04);
+  --card-strong:
+    linear-gradient(135deg, rgba(233, 143, 88, 0.18), rgba(113, 170, 197, 0.16)),
+    rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --field-border: rgba(255, 255, 255, 0.1);
+  --field-bg: rgba(255, 255, 255, 0.05);
+  --field-bg-focus: rgba(255, 255, 255, 0.08);
+  --accent: rgba(233, 143, 88, 0.8);
+  --button-bg: linear-gradient(135deg, rgba(233, 143, 88, 0.24), rgba(113, 170, 197, 0.18));
+  --button-secondary: rgba(255, 255, 255, 0.05);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  color: var(--text);
+  background: var(--bg);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  font-weight: 500;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-theme='light'] {
+  --bg:
+    radial-gradient(circle at top left, rgba(244, 176, 124, 0.35), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(132, 177, 205, 0.25), transparent 30%),
+    linear-gradient(135deg, #fbf4ea 0%, #f1e5d5 52%, #edf3f6 100%);
+  --text: #251b16;
+  --muted: rgba(37, 27, 22, 0.72);
+  --soft: rgba(37, 27, 22, 0.55);
+  --panel-bg: rgba(255, 251, 246, 0.8);
+  --card-bg: rgba(255, 255, 255, 0.55);
+  --card-strong:
+    linear-gradient(135deg, rgba(244, 176, 124, 0.26), rgba(132, 177, 205, 0.22)),
+    rgba(255, 255, 255, 0.72);
+  --border: rgba(80, 55, 33, 0.12);
+  --border-soft: rgba(80, 55, 33, 0.08);
+  --field-border: rgba(80, 55, 33, 0.12);
+  --field-bg: rgba(255, 255, 255, 0.72);
+  --field-bg-focus: rgba(255, 255, 255, 0.96);
+  --accent: rgba(193, 106, 53, 0.88);
+  --button-bg: linear-gradient(135deg, rgba(237, 150, 96, 0.34), rgba(121, 164, 191, 0.28));
+  --button-secondary: rgba(255, 255, 255, 0.72);
+  --shadow: 0 24px 60px rgba(122, 95, 72, 0.12);
 }
 
 * {
@@ -38,22 +82,30 @@ select {
 }
 
 .shell {
-  width: min(1100px, calc(100% - 2rem));
+  width: min(1400px, calc(100% - 2rem));
   margin: 0 auto;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1.05fr);
   gap: 1.5rem;
-  padding: 2rem 0;
+  padding: 1rem 0 2rem;
+}
+
+.topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -0.5rem;
 }
 
 .hero-panel,
-.control-panel {
+.control-panel,
+.saved-panel {
   backdrop-filter: blur(18px);
-  background: rgba(18, 16, 15, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
   border-radius: 28px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--shadow);
 }
 
 .hero-panel {
@@ -63,9 +115,13 @@ select {
   justify-content: center;
 }
 
-.control-panel {
+.control-panel,
+.saved-panel {
   padding: 2rem;
-  align-self: center;
+}
+
+.saved-panel {
+  grid-column: 1 / -1;
 }
 
 .eyebrow,
@@ -82,8 +138,9 @@ select {
 .intro,
 .result-note,
 .formula-copy,
-.range-label {
-  color: rgba(247, 242, 233, 0.72);
+.range-label,
+.empty-state p:last-child {
+  color: var(--muted);
 }
 
 h1,
@@ -92,12 +149,21 @@ p {
   margin: 0;
 }
 
+h1,
+.panel-header h2 {
+  font-family: var(--font-display);
+}
+
 h1 {
-  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
   font-size: clamp(2.8rem, 5vw, 4.8rem);
   line-height: 0.98;
   letter-spacing: -0.05em;
   margin-top: 0.8rem;
+}
+
+.panel-header h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.35rem;
 }
 
 .intro {
@@ -110,14 +176,12 @@ h1 {
   margin-top: 2.5rem;
   padding: 1.5rem 1.6rem 1.8rem;
   border-radius: 24px;
-  background:
-    linear-gradient(135deg, rgba(233, 143, 88, 0.18), rgba(113, 170, 197, 0.16)),
-    rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--card-strong);
+  border: 1px solid var(--border);
 }
 
 .result-value {
-  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(3.2rem, 7vw, 6.4rem);
   line-height: 0.92;
   letter-spacing: -0.06em;
@@ -137,23 +201,20 @@ h1 {
 }
 
 .range-card,
-.formula-card {
+.formula-card,
+.saved-row,
+.saved-table-head,
+.empty-state {
   padding: 1.2rem 1.25rem;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--card-bg);
+  border: 1px solid var(--border-soft);
 }
 
 .range-value {
   margin-top: 0.35rem;
   font-size: 1.6rem;
   line-height: 1.1;
-}
-
-.panel-header h2 {
-  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
-  font-size: 1.8rem;
-  margin-bottom: 0.35rem;
 }
 
 .form-grid {
@@ -172,13 +233,12 @@ h1 {
 }
 
 .field select,
-.field input {
+.field input,
+.save-button,
+.delete-button,
+.theme-toggle {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  color: #f7f2e9;
   border-radius: 16px;
-  padding: 0.95rem 1rem;
   outline: none;
   transition:
     border-color 0.2s ease,
@@ -186,10 +246,20 @@ h1 {
     background 0.2s ease;
 }
 
+.field select,
+.field input {
+  border: 1px solid var(--field-border);
+  background: var(--field-bg);
+  color: var(--text);
+  padding: 0.95rem 1rem;
+}
+
 .field select:focus,
-.field input:focus {
-  border-color: rgba(233, 143, 88, 0.8);
-  background: rgba(255, 255, 255, 0.08);
+.field input:focus,
+.save-button:focus,
+.delete-button:focus {
+  border-color: var(--accent);
+  background: var(--field-bg-focus);
   transform: translateY(-1px);
 }
 
@@ -202,10 +272,59 @@ h1 {
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(247, 242, 233, 0.58);
+  color: var(--soft);
   pointer-events: none;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.save-button,
+.delete-button,
+.theme-toggle {
+  border: 1px solid var(--border);
+  cursor: pointer;
+  color: var(--text);
+}
+
+.save-button {
+  margin-top: 1rem;
+  padding: 0.95rem 1rem;
+  background: var(--button-bg);
+}
+
+.delete-button {
+  padding: 0.7rem 0.8rem;
+  background: var(--button-secondary);
+}
+
+.theme-toggle {
+  width: auto;
+  min-width: 0;
+  padding: 0.55rem 0.8rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.theme-toggle:hover {
+  color: var(--text);
+}
+
+.theme-toggle:focus {
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.theme-toggle-symbol {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .formula-card {
@@ -214,7 +333,7 @@ h1 {
 
 .formula-line {
   margin-top: 0.4rem;
-  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  font-family: var(--font-display);
   font-size: 1.15rem;
 }
 
@@ -222,14 +341,69 @@ h1 {
   margin-top: 0.6rem;
 }
 
+.saved-list {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.saved-table {
+  display: grid;
+  grid-template-columns: 0.95fr 1fr 1fr 1fr 1fr 92px;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.saved-table-head {
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.saved-row span {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.saved-row small {
+  display: none;
+  color: var(--soft);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.empty-state {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
 strong {
-  color: #fff7ef;
+  color: var(--text);
+}
+
+@media (max-width: 1200px) {
+  .shell {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 900px) {
   .shell {
     grid-template-columns: 1fr;
     padding: 1rem 0;
+  }
+
+  .topbar {
+    justify-content: stretch;
+  }
+
+  .theme-toggle {
+    width: 100%;
   }
 
   .control-panel {
@@ -240,13 +414,32 @@ strong {
     order: 2;
   }
 
-  .hero-panel,
-  .control-panel {
-    padding: 1.5rem;
+  .saved-panel {
+    order: 3;
   }
 
-  h1 {
-    max-width: 12ch;
+  .hero-panel,
+  .control-panel,
+  .saved-panel {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .saved-table-head {
+    display: none;
+  }
+
+  .saved-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .saved-row small {
+    display: block;
+  }
+
+  .delete-button {
+    grid-column: 1 / -1;
   }
 }
 
@@ -256,7 +449,8 @@ strong {
     gap: 1rem;
   }
 
-  .range-grid {
+  .range-grid,
+  .saved-row {
     grid-template-columns: 1fr;
   }
 }

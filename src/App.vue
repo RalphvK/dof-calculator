@@ -1,5 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
+
+const STORAGE_KEY = 'dof-calculator-saved-configurations'
+const THEME_STORAGE_KEY = 'dof-calculator-theme'
 
 const cocOptions = [
   { label: 'Full-frame (0.029 mm)', value: '0.029' },
@@ -12,6 +15,8 @@ const circleOfConfusion = ref('0.029')
 const focalLength = ref(50)
 const aperture = ref(2.8)
 const subjectDistance = ref(3)
+const savedConfigurations = ref([])
+const theme = ref('dark')
 
 const subjectDistanceMm = computed(() => Math.max(Number(subjectDistance.value) || 0, 0) * 1000)
 const focalLengthMm = computed(() => Math.max(Number(focalLength.value) || 0, 0.1))
@@ -70,6 +75,65 @@ const farDisplay = computed(() =>
 const cocDisplay = computed(() =>
   cocValue.value.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')
 )
+const themeSymbol = computed(() => (theme.value === 'dark' ? '☀' : '☾'))
+const themeLabel = computed(() => (theme.value === 'dark' ? 'Light theme' : 'Dark theme'))
+
+onMounted(() => {
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
+
+  if (storedTheme === 'light' || storedTheme === 'dark') {
+    theme.value = storedTheme
+  }
+
+  const stored = window.localStorage.getItem(STORAGE_KEY)
+
+  if (!stored) {
+    return
+  }
+
+  try {
+    const parsed = JSON.parse(stored)
+    savedConfigurations.value = Array.isArray(parsed) ? parsed : []
+  } catch {
+    savedConfigurations.value = []
+  }
+})
+
+watch(
+  savedConfigurations,
+  (value) => {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
+  },
+  { deep: true },
+)
+
+watch(
+  theme,
+  (value) => {
+    document.documentElement.setAttribute('data-theme', value)
+    window.localStorage.setItem(THEME_STORAGE_KEY, value)
+  },
+  { immediate: true },
+)
+
+function saveConfiguration() {
+  savedConfigurations.value.unshift({
+    id: crypto.randomUUID(),
+    coc: cocDisplay.value,
+    focalLength: Number(focalLength.value) || 0,
+    aperture: Number(aperture.value) || 0,
+    subjectDistance: Number(subjectDistance.value) || 0,
+    dof: dofDisplay.value,
+  })
+}
+
+function deleteConfiguration(id) {
+  savedConfigurations.value = savedConfigurations.value.filter((configuration) => configuration.id !== id)
+}
+
+function toggleTheme() {
+  theme.value = theme.value === 'dark' ? 'light' : 'dark'
+}
 
 function formatDistance(distanceMm) {
   const distanceMeters = distanceMm / 1000
@@ -88,6 +152,13 @@ function formatDistance(distanceMm) {
 
 <template>
   <main class="shell">
+    <div class="topbar">
+      <button class="theme-toggle" type="button" @click="toggleTheme">
+        <span class="theme-toggle-symbol" aria-hidden="true">{{ themeSymbol }}</span>
+        <span>{{ themeLabel }}</span>
+      </button>
+    </div>
+
     <section class="hero-panel">
       <p class="eyebrow">Calculate depth of field</p>
       <h1>Depth of Field</h1>
@@ -159,12 +230,58 @@ function formatDistance(distanceMm) {
         </label>
       </div>
 
+      <button class="save-button" type="button" @click="saveConfiguration">
+        Save configuration
+      </button>
+
       <div class="formula-card">
-        <p class="formula-heading">Calculation details</p>
+        <p class="formula-heading">Depth of field formula</p>
         <p class="formula-line">DOF ≈ (2 × u² × N × c) / f²</p>
         <p class="formula-copy">
           Using a circle of confusion of <strong>{{ cocDisplay }} mm</strong>.
         </p>
+      </div>
+    </section>
+
+    <section class="saved-panel">
+      <div class="panel-header">
+        <h2>Saved Configurations</h2>
+        <p>Compare saved setups side by side and remove the ones you no longer need.</p>
+      </div>
+
+      <div v-if="savedConfigurations.length" class="saved-list" aria-label="Saved configurations">
+        <div class="saved-table saved-table-head" aria-hidden="true">
+          <span>CoC</span>
+          <span>Focal</span>
+          <span>Aperture</span>
+          <span>Distance</span>
+          <span>DoF</span>
+          <span>Delete</span>
+        </div>
+
+        <article
+          v-for="configuration in savedConfigurations"
+          :key="configuration.id"
+          class="saved-table saved-row"
+        >
+          <span><small>CoC</small>{{ configuration.coc }} mm</span>
+          <span><small>Focal</small>{{ configuration.focalLength }} mm</span>
+          <span><small>Aperture</small>f/{{ configuration.aperture }}</span>
+          <span><small>Distance</small>{{ configuration.subjectDistance }} m</span>
+          <span><small>DoF</small>{{ configuration.dof }}</span>
+          <button
+            class="delete-button"
+            type="button"
+            @click="deleteConfiguration(configuration.id)"
+          >
+            Delete
+          </button>
+        </article>
+      </div>
+
+      <div v-else class="empty-state">
+        <p>No saved configurations yet.</p>
+        <p>Use “Save configuration” to build up a comparison list.</p>
       </div>
     </section>
   </main>
