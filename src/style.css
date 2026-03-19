@@ -1,0 +1,254 @@
+:root {
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #f7f2e9;
+  background:
+    radial-gradient(circle at top left, rgba(211, 125, 72, 0.28), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(95, 133, 161, 0.2), transparent 30%),
+    linear-gradient(135deg, #1b1714 0%, #2d241f 45%, #161413 100%);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.shell {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.hero-panel,
+.control-panel {
+  backdrop-filter: blur(18px);
+  background: rgba(18, 16, 15, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.hero-panel {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.control-panel {
+  padding: 2rem;
+  align-self: center;
+}
+
+.eyebrow,
+.result-label,
+.range-label,
+.formula-heading {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+}
+
+.eyebrow,
+.panel-header p,
+.intro,
+.result-note,
+.formula-copy,
+.range-label {
+  color: rgba(247, 242, 233, 0.72);
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  margin-top: 0.8rem;
+}
+
+.intro {
+  max-width: 55ch;
+  margin-top: 1.25rem;
+  font-size: 1.05rem;
+}
+
+.result-card {
+  margin-top: 2.5rem;
+  padding: 1.5rem 1.6rem 1.8rem;
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(233, 143, 88, 0.18), rgba(113, 170, 197, 0.16)),
+    rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.result-value {
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  font-size: clamp(3.2rem, 7vw, 6.4rem);
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+  margin-top: 0.5rem;
+}
+
+.result-note {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.range-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.range-card,
+.formula-card {
+  padding: 1.2rem 1.25rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.range-value {
+  margin-top: 0.35rem;
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.panel-header h2 {
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  font-size: 1.8rem;
+  margin-bottom: 0.35rem;
+}
+
+.form-grid {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.field span {
+  font-size: 0.95rem;
+}
+
+.field select,
+.field input {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f7f2e9;
+  border-radius: 16px;
+  padding: 0.95rem 1rem;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.field select:focus,
+.field input:focus {
+  border-color: rgba(233, 143, 88, 0.8);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap small {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(247, 242, 233, 0.58);
+  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.formula-card {
+  margin-top: 1.25rem;
+}
+
+.formula-line {
+  margin-top: 0.4rem;
+  font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+  font-size: 1.15rem;
+}
+
+.formula-copy {
+  margin-top: 0.6rem;
+}
+
+strong {
+  color: #fff7ef;
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+    padding: 1rem 0;
+  }
+
+  .hero-panel,
+  .control-panel {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    max-width: 12ch;
+  }
+}
+
+@media (max-width: 560px) {
+  .shell {
+    width: min(100%, calc(100% - 1rem));
+    gap: 1rem;
+  }
+
+  .range-grid {
+    grid-template-columns: 1fr;
+  }
+}
