@@ -231,7 +231,13 @@ function formatDistance(distanceMm) {
       </div>
 
       <button class="save-button" type="button" @click="saveConfiguration">
-        Save configuration
+        <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M5 3h11l3 3v15H5V3Zm2 2v4h8V5H7Zm0 9v5h10v-8H7v3Zm2 1h6v4H9v-4Z"
+            fill="currentColor"
+          />
+        </svg>
+        <span>Save configuration</span>
       </button>
 
       <div class="formula-card">
